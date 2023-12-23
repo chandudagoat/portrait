@@ -1,0 +1,25 @@
+syntax="proto3";
+
+package profile;
+
+service Profile {
+    rpc Create(CreateProfileRequest) returns (CreateProfileResponse);
+}
+
+enum Socials {
+    TWITTER=0;
+    INSTAGRAM=1;
+}
+
+message CreateProfileRequest {
+    int32 id = 1;
+    string name = 2;
+    string bio = 3;
+    string pronouns = 4;
+    Socials socials = 5; 
+}
+
+message CreateProfileResponse {
+    string mongo_id = 1;
+    bool recieved = 2;
+}
