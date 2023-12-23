@@ -14,17 +14,17 @@ class ProfileStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Create = channel.unary_unary(
-                '/profile.Profile/Create',
-                request_serializer=profile__pb2.CreateProfileRequest.SerializeToString,
-                response_deserializer=profile__pb2.CreateProfileResponse.FromString,
+        self.Profile = channel.unary_unary(
+                '/profile.Profile/Profile',
+                request_serializer=profile__pb2.ProfileRequest.SerializeToString,
+                response_deserializer=profile__pb2.ProfileResponse.FromString,
                 )
 
 
 class ProfileServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def Create(self, request, context):
+    def Profile(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,10 +33,10 @@ class ProfileServicer(object):
 
 def add_ProfileServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Create': grpc.unary_unary_rpc_method_handler(
-                    servicer.Create,
-                    request_deserializer=profile__pb2.CreateProfileRequest.FromString,
-                    response_serializer=profile__pb2.CreateProfileResponse.SerializeToString,
+            'Profile': grpc.unary_unary_rpc_method_handler(
+                    servicer.Profile,
+                    request_deserializer=profile__pb2.ProfileRequest.FromString,
+                    response_serializer=profile__pb2.ProfileResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -49,7 +49,7 @@ class Profile(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def Create(request,
+    def Profile(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,8 +59,8 @@ class Profile(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/profile.Profile/Create',
-            profile__pb2.CreateProfileRequest.SerializeToString,
-            profile__pb2.CreateProfileResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/profile.Profile/Profile',
+            profile__pb2.ProfileRequest.SerializeToString,
+            profile__pb2.ProfileResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

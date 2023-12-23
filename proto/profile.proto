@@ -3,23 +3,18 @@ syntax="proto3";
 package profile;
 
 service Profile {
-    rpc Create(CreateProfileRequest) returns (CreateProfileResponse);
+    rpc Profile(ProfileRequest) returns (ProfileResponse);  
 }
 
-enum Socials {
-    TWITTER=0;
-    INSTAGRAM=1;
-}
-
-message CreateProfileRequest {
-    int32 id = 1;
+message ProfileRequest {
+    string id = 1;
     string name = 2;
     string bio = 3;
     string pronouns = 4;
-    Socials socials = 5; 
+    bytes profile_pic = 5;
 }
 
-message CreateProfileResponse {
+message ProfileResponse {
     string mongo_id = 1;
-    bool recieved = 2;
+    bool success = 2;
 }
