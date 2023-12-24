@@ -1,21 +1,28 @@
 package main
 
 import (
-	"fmt"
-	"io"
+	"log"
 	"net/http"
+	"os"
+	"profiley/handlers"
+	"time"
 )
 
 func main() {
-	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
-		d, err := io.ReadAll(r.Body)
+	l := log.New(os.Stdout, "profile-api", log.LstdFlags)
+	hh := handlers.NewData(l)
 
-		if err != nil {
-			http.Error(rw, "oops", http.StatusBadRequest)
-		}
+	serve_mux := http.NewServeMux()
+	serve_mux.Handle("/", hh)
 
-		fmt.Printf("Data: %s\n", d)
-	})
+	server := &http.Server{
+		Addr:         ":3000",
+		Handler:      serve_mux,
+		IdleTimeout:  120 * time.Second,
+		ReadTimeout:  1 * time.Second,
+		WriteTimeout: 1 * time.Second,
+	}
 
-	http.ListenAndServe(":3000", nil)
+	server.ListenAndServe()
+
 }
