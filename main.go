@@ -17,8 +17,8 @@ func main() {
 	}
 
 	app := fiber.New()
-
-	app.Post("/", handlers.CreateProfile)
+	routes(app)
+	profile_routes(app)
 
 	app.Listen(":3000")
 }
@@ -57,4 +57,14 @@ func load_db() error {
 	}
 
 	return nil
+}
+
+func routes(app *fiber.App) {
+	routes := app.Group("/")
+	routes.Get("/health", handlers.CheckHealth)
+}
+
+func profile_routes(app *fiber.App) {
+	profile_group := app.Group("/profile")
+	profile_group.Post("/create", handlers.CreateProfile)
 }
