@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"context"
 	"fmt"
+	"profiley/database"
 	"profiley/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -15,10 +17,14 @@ func CreateProfile(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(200)
 	}
 
-	fmt.Println("name: ", profile.Name)
-	fmt.Println("pronouns: ", profile.Pronouns)
-	fmt.Println("bio: ", profile.Bio)
-	fmt.Println("links: ", profile.Links)
+	collection := database.GetCollection("profiles")
+	result, err := collection.InsertOne(context.TODO(), profile)
+
+	fmt.Println(result)
+
+	if err != nil {
+		panic(err)
+	}
 
 	return ctx.SendString("success")
 }
