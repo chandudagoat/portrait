@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"profiley/database"
@@ -62,5 +63,28 @@ func CreateProfile(c *fiber.Ctx) error {
 }
 
 func GetProfile(c *fiber.Ctx) error {
-	return nil
+	collection := database.GetCollection("profiles")
+	param_username := c.Params("username")
+	fmt.Println(param_username)
+
+	profile_filter := bson.D{{Key: "username", Value: param_username}}
+	fmt.Println(profile_filter)
+
+	cur, err := collection.Find(context.TODO(), profile_filter)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var results []models.Profile
+	if err = cur.All(context.TODO(), &results); err != nil {
+		panic(err)
+	}
+
+	for _, result := range results {
+		res, _ := json.Marshal(result)
+		fmt.Println(string(res))
+	}
+
+	return c.SendString("success")
 }
