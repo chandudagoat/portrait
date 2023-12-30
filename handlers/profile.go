@@ -83,8 +83,36 @@ func GetProfile(c *fiber.Ctx) error {
 
 	for _, result := range results {
 		res, _ := json.Marshal(result)
-		fmt.Println(string(res))
+		return c.SendString(string(res))
 	}
 
 	return c.SendString("success")
+}
+
+func UpdateProfile(c *fiber.Ctx) error {
+	param_username := c.Params("username")
+	profile_filter := bson.D{{Key: "username", Value: param_username}}
+	collection := database.GetCollection("profiles")
+
+	cur, err := collection.Find(context.TODO(), profile_filter)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var profile_filter_results []models.Profile
+
+	if err = cur.All(context.TODO(), &profile_filter_results); err != nil {
+		res, err := json.Marshal(profile_filter_results)
+
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(res)
+	}
+
+	// updated_profile := new(models.Profile)
+	return nil
+
 }
