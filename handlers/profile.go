@@ -118,3 +118,20 @@ func UpdateProfile(c *fiber.Ctx) error {
 
 	return c.SendString("success")
 }
+
+func DeleteProfile(c *fiber.Ctx) error {
+	collection := database.GetCollection("profiles")
+	username := c.Params("username")
+
+	filter := bson.D{{Key: "username", Value: username}}
+
+	_, err := collection.DeleteOne(context.TODO(), filter)
+
+	if err != nil {
+		panic(err)
+	}
+
+	success_msg := "successfully deleted user" + username
+
+	return c.SendString(success_msg)
+}
