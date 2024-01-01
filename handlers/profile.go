@@ -90,29 +90,31 @@ func GetProfile(c *fiber.Ctx) error {
 }
 
 func UpdateProfile(c *fiber.Ctx) error {
-	param_username := c.Params("username")
-	profile_filter := bson.D{{Key: "username", Value: param_username}}
 	collection := database.GetCollection("profiles")
+	param_username := c.Params("username")
 
-	cur, err := collection.Find(context.TODO(), profile_filter)
+	profile_filter := bson.D{{Key: "username", Value: param_username}}
+	filter := new(models.Profile)
+
+	if err := c.BodyParser(&filter); err != nil {
+		panic(err)
+	}
+
+	updated_filter := bson.D{{
+		Key: "$set",
+		Value: bson.D{
+			{Key: "name", Value: filter.Name},
+			{Key: "pronouns", Value: filter.Pronouns},
+			{Key: "bio", Value: filter.Bio},
+			{Key: "links", Value: filter.Links},
+		},
+	}}
+
+	_, err := collection.UpdateOne(context.TODO(), profile_filter, updated_filter)
 
 	if err != nil {
 		panic(err)
 	}
 
-	var profile_filter_results []models.Profile
-
-	if err = cur.All(context.TODO(), &profile_filter_results); err != nil {
-		res, err := json.Marshal(profile_filter_results)
-
-		if err != nil {
-			panic(err)
-		}
-
-		fmt.Println(res)
-	}
-
-	// updated_profile := new(models.Profile)
-	return nil
-
+	return c.SendString("success")
 }

@@ -68,4 +68,5 @@ func profile_routes(app *fiber.App) {
 	profile_group := app.Group("/profile")
 	profile_group.Post("/create", handlers.CreateProfile)
 	profile_group.Get("/:username", handlers.GetProfile)
+	profile_group.Post("/update/:username", handlers.UpdateProfile)
 }
