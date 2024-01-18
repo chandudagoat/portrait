@@ -20,7 +20,7 @@ func main() {
 	routes(app)
 	profile_routes(app)
 
-	app.Listen(":3000")
+	app.Listen(":8000")
 }
 
 func init_app() error {
