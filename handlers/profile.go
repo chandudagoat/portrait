@@ -12,6 +12,26 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+func ValidateUsername(c *fiber.Ctx) error {
+	collection := database.GetCollection("profiles")
+	param_username := c.Params("username")
+
+	profile_filter := bson.D{{Key: "username", Value: param_username}}
+
+	cur, err := collection.Find(context.TODO(), profile_filter)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var results []models.Profile
+	if err = cur.All(context.TODO(), &results); err != nil {
+		panic(err)
+	}
+
+	return c.JSON(results)
+}
+
 func CreateProfile(c *fiber.Ctx) error {
 	profile := new(models.Profile)
 

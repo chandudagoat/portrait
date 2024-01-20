@@ -68,6 +68,7 @@ func load_db() error {
 func routes(app *fiber.App) {
 	routes := app.Group("/")
 	routes.Get("/health", handlers.CheckHealth)
+	routes.Get("/:username", handlers.ValidateUsername)
 }
 
 func profile_routes(app *fiber.App) {
